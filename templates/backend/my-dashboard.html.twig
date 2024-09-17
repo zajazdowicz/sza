@@ -1,0 +1,24 @@
+
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Witaj w panelu{% endblock %}
+{# {% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %} #}
+
+{% block main %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <table class="datagrid">
+        <thead>
+
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+{% endblock %}
