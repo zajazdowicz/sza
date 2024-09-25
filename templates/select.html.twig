@@ -1,0 +1,59 @@
+<h2>Wybierz Miasto</h2>
+
+<form action="/dev/map" id="carform" method="post">
+	<input type="submit">
+</form>
+<br>
+
+<label for="cars">Wybierz miasto</label>
+<select id="cars" name="dataCity" form="carform">
+	{% for opt in option %}
+		<option value='{"name": "{{ opt.name }}", "city_id": "{{ opt.place_id }}", "info": [ {% for point in opt.boundingbox %} "{{ point }}" {% if not loop.last %}, {% endif %} {% endfor %} ]}'>
+			{{ opt.display_name }}
+		</option>
+
+
+	{% endfor %}
+</select>
+
+
+<script>
+
+	const wayId = '418411251';
+// Zastąp odpowiednim ID
+
+
+// URL do Overpass API
+const overpassUrl = 'https://overpass-api.de/api/interpreter';
+const query = `
+        [out:json];
+        way(${wayId});
+        out body;
+        `;
+
+fetch(overpassUrl, {
+method: 'POST',
+body: `data=${
+encodeURIComponent(query)
+}`,
+headers: {
+'Content-Type': 'application/x-www-form-urlencoded'
+}
+}).then(response => {
+if (!response.ok) {
+throw new Error(`Błąd HTTP! status: ${
+response.status
+}`);
+}
+return response.json();
+}).then(data => {
+const way = data.elements[0];
+if (way) {
+console.log('Dane o way:', way);
+const streetName = way.tags ?. name || way.tags ?. addr_street || 'Nie znaleziono nazwy ulicy';
+console.log('Nazwa ulicy:', streetName);
+}
+}).catch(error => {
+console.error('Błąd podczas zapytania o way:', error);
+});
+</script>

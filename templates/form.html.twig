@@ -1,0 +1,19 @@
+{# templates/form/simple_form.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Prosty Formularz
+{% endblock %}
+
+{% block body %}
+	<h2>Prosty Formularz</h2>
+
+
+	<form action="/dev/city" id="carform" method="post">
+		<label for="fname">Wpisz miasto:</label>
+		<input type="text" id="fname" name="city">
+		<input type="submit">
+	</form>
+	<br>
+
+
+{% endblock %}

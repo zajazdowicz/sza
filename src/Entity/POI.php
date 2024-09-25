@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\POIRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: POIRepository::class)]
@@ -29,6 +30,9 @@ class POI
      */
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'poi')]
     private Collection $reviews;
+
+    #[ORM\Column(type: Types::BIGINT)]
+    private ?string $id_openstreetmap = null;
 
     public function __construct()
     {
@@ -102,6 +106,18 @@ class POI
                 $review->setPoi(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdOpenstreetmap(): ?string
+    {
+        return $this->id_openstreetmap;
+    }
+
+    public function setIdOpenstreetmap(string $id_openstreetmap): static
+    {
+        $this->id_openstreetmap = $id_openstreetmap;
 
         return $this;
     }
