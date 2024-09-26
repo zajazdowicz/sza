@@ -19,10 +19,10 @@ class POI
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $lat = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $lon = null;
 
     /**
@@ -61,7 +61,7 @@ class POI
         return $this->lat;
     }
 
-    public function setLat(string $lat): static
+    public function setLat(?string $lat): static
     {
         $this->lat = $lat;
 
@@ -73,7 +73,7 @@ class POI
         return $this->lon;
     }
 
-    public function setLon(string $lon): static
+    public function setLon(?string $lon): static
     {
         $this->lon = $lon;
 
