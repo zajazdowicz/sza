@@ -47,60 +47,63 @@ class DevController extends AbstractController
     #[Route('/dev/map', name: 'app_api222tesrrrt',)]
     public function map(Request $request): Response
     {
-        $data =   $request->request->all();
+        $data = $request->request->all();
+        $decodedData = json_decode($data['dataCity'], true);
 
-        // $json = $data;
-        $test = json_decode($data['dataCity'], true);
+        $north = $decodedData['info'][0]; // Północ
+        $south = $decodedData['info'][1]; // Południe
+        $east = $decodedData['info'][2]; // Wschód
+        $west = $decodedData['info'][3]; // Zachód
 
-        $north = $test['info'][0]; // Północ
-        $south = $test['info'][1]; // Południe
-        $east = $test['info'][2]; // Wschód
-        $west = $test['info'][3]; // Zachód
+        // Pobranie punktów na podstawie współrzędnych
+        $punkty = $this->api->getPunkt($north, $east, $south, $west);
 
-        $punkt =  $this->api->getPunkt($north, $east, $south, $west);
+        // Przygotowanie identyfikatorów i danych początkowych
         $ids = [];
         $onlyIds = [];
-        $wizytkowka = [];
 
-        foreach ($punkt['elements'] as $value) {
-            if (isset($value['tags']['name']) and $value['tags']['name'] != '') {
-                $ids[$value['id']] = [$value['lat'], $value['lon'], $value['tags']['name']];
-                $onlyIds[] = $value['id'];
+        foreach ($punkty['elements'] as $element) {
+            if (!empty($element['tags']['name'])) {
+                $ids[$element['id']] = [$element['lat'], $element['lon'], $element['tags']['name']];
+                $onlyIds[] = $element['id'];
             }
         }
 
+        // Pobranie wizytówek
         $wizytkowki = $this->poiService->getWizytowka($onlyIds);
+        $wizytowkaList = [];
 
-
-        foreach ($wizytkowki as $value) {
-            // $ids[] = $value['id'];
-
-            if (array_key_exists($value->getIdOpenstreetmap(), $ids)) {
-
-                $wizytkowka[] = new Wizytowka(
-                    $value->getLat(),
-                    $value->getLon(),
-                    $value->getIdOpenstreetmap(),
-                    $value->getNameRestaurant(),
-                    $value->getDescription(),
-                    $value->getImage(),
+        // Przekształcenie danych z wizytówki i dopasowanie do punktów
+        foreach ($wizytkowki as $wizytkowka) {
+            $id = $wizytkowka->getIdOpenstreetmap();
+            if (isset($ids[$id])) {
+                $wizytowkaList[] = new Wizytowka(
+                    $wizytkowka->getLat(),
+                    $wizytkowka->getLon(),
+                    $id,
+                    $wizytkowka->getNameRestaurant(),
+                    $wizytkowka->getDescription(),
+                    $wizytkowka->getImage(),
                     true
                 );
-                unset($ids[$value->getIdOpenstreetmap()]);
+                unset($ids[$id]);
             }
         }
-        foreach ($ids as $value) {
-            $wizytkowka[] = new Wizytowka($value[0], $value[1], null, $value[2]);
+
+        // Dodanie pozostałych punktów bez wizytówki
+        foreach ($ids as $id => $point) {
+            $wizytowkaList[] = new Wizytowka($point[0], $point[1], null, $point[2]);
         }
 
+        // Renderowanie widoku z danymi
         return $this->render(
             'map.html.twig',
             [
-                //'data' => $punkt,
-                'lat' => $test['lat'],
-                'lon' => $test['lon'],
-                'wizytowka' => $wizytkowka
-            ],
+                'lat' => $decodedData['lat'],
+                'lon' => $decodedData['lon'],
+                'wizytowka' => $wizytowkaList,
+            ]
         );
     }
+
 }

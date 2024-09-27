@@ -2,10 +2,7 @@
 
 namespace App\Entity;
 
-
-
-
-class Wizytowka 
+class Wizytowka
 {
     public function __construct(
         private string $lat,
@@ -16,10 +13,7 @@ class Wizytowka
         private ?string $image = null,
         private ?bool $partner = false,
 
-    )
-    {
-        
-    }
+    ) {}
     public function toArray(): array
     {
         return [
