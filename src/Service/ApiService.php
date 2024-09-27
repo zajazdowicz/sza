@@ -50,12 +50,16 @@ class ApiService
     {
 
         $client = HttpClient::create();
-        $response = $client->request('GET', 'https://overpass-api.de/api/interpreter?data=[out:json];node["amenity"="restaurant"](' . $latMin .','. $lonMin .','. $latMax .',' . $lonMax .');out;', [
+       $query = '[out:json];node["amenity"="restaurant"](' . $latMin . ',' . $lonMin . ',' . $latMax . ',' . $lonMax . ');out;';
+        //$query = '[out:json];node['amenity'='restaurant'](50.7347282,19.0112543,50.8845418,19.2331843);out;';
+        $url = "https://overpass-api.de/api/interpreter?data=" .  urldecode($query);
+       
+        $response = $client->request('GET', urldecode($url) , [
             'headers' => [
                 'Content-Type' => 'application/json',
-            ],'json' => [
             ]
         ]);
+
         $statusCode = $response->getStatusCode();
         $content = $response->getContent();
         return $response->toArray();

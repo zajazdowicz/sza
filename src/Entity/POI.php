@@ -34,6 +34,15 @@ class POI
     #[ORM\Column(type: Types::BIGINT)]
     private ?string $id_openstreetmap = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $nameRestaurant = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -118,6 +127,42 @@ class POI
     public function setIdOpenstreetmap(string $id_openstreetmap): static
     {
         $this->id_openstreetmap = $id_openstreetmap;
+
+        return $this;
+    }
+
+    public function getNameRestaurant(): ?string
+    {
+        return $this->nameRestaurant;
+    }
+
+    public function setNameRestaurant(string $nameRestaurant): static
+    {
+        $this->nameRestaurant = $nameRestaurant;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

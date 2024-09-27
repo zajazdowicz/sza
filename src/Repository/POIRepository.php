@@ -16,6 +16,19 @@ class POIRepository extends ServiceEntityRepository
         parent::__construct($registry, POI::class);
     }
 
+         /**
+        * @return POI[] Returns an array of POI objects
+        */
+       public function findWizytyokwa(array $ids): array
+       {
+           return $this->createQueryBuilder('p')
+               ->andWhere('p.id_openstreetmap in (:val)')
+               ->setParameter('val', $ids)
+               ->orderBy('p.id', 'ASC')
+               ->getQuery()
+               ->getResult()
+           ;
+       }
     //    /**
     //     * @return POI[] Returns an array of POI objects
     //     */

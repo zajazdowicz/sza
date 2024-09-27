@@ -7,16 +7,36 @@
 
 <label for="cars">Wybierz miasto</label>
 <select id="cars" name="dataCity" form="carform">
-	{% for opt in option %}
-		<option value='{"name": "{{ opt.name }}", "city_id": "{{ opt.place_id }}", "info": [ {% for point in opt.boundingbox %} "{{ point }}" {% if not loop.last %}, {% endif %} {% endfor %} ]}'>
-			{{ opt.display_name }}
-		</option>
-
-
-	{% endfor %}
-</select>
-
-
+        {% for opt in option %}
+            {% set infoArray = [] %}  {# Tworzymy pustą tablicę dla info #}
+            {% for point in opt.boundingbox %}
+                {% set infoArray = infoArray | merge([point]) %} {# Łączymy nowe punkty #}
+            {% endfor %}
+            
+            {% set data = {
+                "name": opt.name,
+                "city_id": opt.place_id,
+				"lat": opt.lat,
+				"lon": opt.lon,
+                "info": infoArray
+            } %}
+            
+            <option value='{{ data | json_encode }}'>		
+                {{ opt.display_name }}
+            </option>
+        {% endfor %}
+    </select>
+<script>
+function updateHiddenFields() {
+    var selectField = document.getElementById("mySelectField");
+    var selectedValue = JSON.parse(selectField.value);
+    
+    // Ustaw ukryte pola
+    document.getElementById("city_name").value = selectedValue.name;
+    document.getElementById("city_id").value = selectedValue.city_id;
+}
+</script>
+{# 
 <script>
 
 	const wayId = '418411251';
@@ -56,4 +76,4 @@ console.log('Nazwa ulicy:', streetName);
 }).catch(error => {
 console.error('Błąd podczas zapytania o way:', error);
 });
-</script>
+</script> #}

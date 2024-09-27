@@ -1,81 +1,106 @@
 <head>
-	<!-- Styl Leaflet -->
-	<link
-	rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-
-	<!-- Skrypt Leaflet -->
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+   <!-- Styl Leaflet -->
+   <link
+      rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+   <!-- Skrypt Leaflet -->
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
-
 <div id="map" style="height: 500px;"></div>
 <div id="result" style="height: 500px;"></div>
 <script>
+  
+   const lat = {{ lat|json_encode|raw }};
+   const lon = {{ lon|json_encode|raw }};
+  const wizytowka = {{ wizytowka|map(w => w.toArray())|json_encode()|raw }};
 
-	const dataFromSymfony = {{ data|json_encode|raw }};
-const data1 = JSON.parse(dataFromSymfony.dataCity)
+//    const data1 = JSON.parse(dataFromSymfony.dataCity)
+   
+//    const city = data1.name
+//    const point = data1.info
+   
+//const data1 = JSON.parse(dataFromSymfony)
+  console.log(wizytowka);
 
-const city = data1.name
-const point = data1.info
+   var map = L.map('map').setView([
+   lat, lon
+   ], 12);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+   
 
+   
 
-// Zapytanie do Nominatim API
-fetch(`https://nominatim.openstreetmap.org/search?city=${
-encodeURIComponent(city)
+   wizytowka.forEach(element => {
 
-
-}&format=json`).then(response => response.json()).then(data => {
-if (data.length === 0) {
-document.getElementById('result').innerHTML = "Nie znaleziono miasta.";
-return;
-}
-
-const select = document.createElement("select");
-
-// Tworzymy opcje na podstawie tablicy `options`
-data.forEach(optionText => {
-const option = document.createElement("option");
-option.value = optionText.display_name; // Wartość opcji
-option.textContent = optionText.display_name; // Tekst wyświetlany
-select.appendChild(option); // Dodajemy opcję do selecta
-});
-
-// Znajdujemy div, do którego wstawimy select
-const resultDiv = document.getElementById("result");
-resultDiv.innerHTML = ""; // Czyścimy zawartość div
-resultDiv.appendChild(select); // Dodajemy select do div
-
-const lat = parseFloat(data[0].lat);
-const lon = parseFloat(data[0].lon);
-const north = point[0]; // Północ
-const south = point[1]; // Południe
-const east = point[2]; // Wschód
-const west = point[3]; // Zachód
+ 
+ 
+   L.marker([element.lat, element.lon]).addTo(map).bindPopup("" + element.name + " " + element.desc + "<img src='/public/upload/' " + element.image + "></img>");
+   
+  
+   });
+  
 
 
-var map = L.map('map').setView([
-lat, lon
-], 8);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
 
 
-fetch(`https://overpass-api.de/api/interpreter?data=[out:json];(
-node["amenity"="restaurant"](${north},${east},${south},${west});
-node["amenity"="cafe"](${north},${east},${south},${west});
-); out;`).then(response => response.json()).then(data => {
 
 
-data.elements.forEach(element => {});
-i = 0
-data.elements.forEach(element => {
-console.log(element);
 
-if ('name' in element.tags) {
-L.marker([element.lat, element.lon]).addTo(map).bindPopup("" + element.tags.name);
-
-}
-});
-});
-
-
-})
+   
+   
+//    // Zapytanie do Nominatim API
+//    fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json`).then(response => response.json()).then(data => {
+//    if (data.length === 0) {
+//    document.getElementById('result').innerHTML = "Nie znaleziono miasta.";
+//    return;
+//    }
+   
+//    const select = document.createElement("select");
+   
+//    // Tworzymy opcje na podstawie tablicy `options`
+//    data.forEach(optionText => {
+//    const option = document.createElement("option");
+//    option.value = optionText.display_name; // Wartość opcji
+//    option.textContent = optionText.display_name; // Tekst wyświetlany
+//    select.appendChild(option); // Dodajemy opcję do selecta
+//    });
+   
+//    // Znajdujemy div, do którego wstawimy select
+//    const resultDiv = document.getElementById("result");
+//    resultDiv.innerHTML = ""; // Czyścimy zawartość div
+//    resultDiv.appendChild(select); // Dodajemy select do div
+   
+//    const lat = parseFloat(data[0].lat);
+//    const lon = parseFloat(data[0].lon);
+//    const north = point[0]; // Północ
+//    const south = point[1]; // Południe
+//    const east = point[2]; // Wschód
+//    const west = point[3]; // Zachód
+   
+   
+//    var map = L.map('map').setView([
+//    lat, lon
+//    ], 8);
+//    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+   
+   
+//    fetch(`https://overpass-api.de/api/interpreter?data=[out:json];(
+//    node["amenity"="restaurant"](${north},${east},${south},${west});
+//    node["amenity"="cafe"](${north},${east},${south},${west});
+//    ); out;`).then(response => response.json()).then(data => {
+   
+   
+//    data.elements.forEach(element => {});
+//    i = 0
+//    data.elements.forEach(element => {
+//    console.log(element);
+   
+//    if ('name' in element.tags) {
+//    L.marker([element.lat, element.lon]).addTo(map).bindPopup("" + element.tags.name);
+   
+//    }
+//    });
+//    });
+   
+   
+//    })
 </script>
