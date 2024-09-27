@@ -12,7 +12,7 @@ class PoiService
    }
     public function getWizytowka(array $ids): array
     {
-        dd($ids);
+        //dd($ids);
         return $this->pOIRepository->findWizytyokwa($ids);
 
     }

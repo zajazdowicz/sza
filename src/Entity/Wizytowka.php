@@ -14,6 +14,7 @@ class Wizytowka
         private ?string $name = null,
         private ?string $desc = null,
         private ?string $image = null,
+        private ?bool $partner = false,
 
     )
     {
@@ -28,6 +29,7 @@ class Wizytowka
             'name' => $this->name,
             'desc' => $this->desc,
             'image' => $this->image,
+            'partner' => $this->partner
         ];
     }
 }
