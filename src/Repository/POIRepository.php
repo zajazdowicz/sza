@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\POI;
+use App\Entity\Poi;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<POI>
+ * @extends ServiceEntityRepository<Poi>
  */
-class POIRepository extends ServiceEntityRepository
+class PoiRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, POI::class);
+        parent::__construct($registry, Poi::class);
     }
 
          /**
-        * @return POI[] Returns an array of POI objects
+        * @return Poi[] Returns an array of Poi objects
         */
        public function findWizytyokwa(array $ids): array
        {
@@ -30,7 +30,7 @@ class POIRepository extends ServiceEntityRepository
            ;
        }
     //    /**
-    //     * @return POI[] Returns an array of POI objects
+    //     * @return Poi[] Returns an array of Poi objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -44,7 +44,7 @@ class POIRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?POI
+    //    public function findOneBySomeField($value): ?Poi
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')
