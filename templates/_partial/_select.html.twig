@@ -1,0 +1,15 @@
+{{ dump(cities) }}
+<div>
+	<h5>Informacje o mieście:</h5>
+	{% if cities is not empty %}
+		<ul>
+			{% for city in cities %}
+				<li>{{ city.display_name }}</li>
+				{# Przykład wyświetlenia miasta #}
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>Nie znaleziono miasta!</p>
+	{% endif %}
+</div>
+

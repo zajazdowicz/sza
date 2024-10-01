@@ -10,10 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/dev', name: 'app_dev_')]
+
 class DevController extends AbstractController
 {
     public function __construct(private ApiService $api, private PoiService $poiService) {}
-    #[Route('/dev', name: 'app_dev')]
     public function index(): Response
     {
         return $this->render('dev/index.html.twig', [
@@ -21,30 +22,31 @@ class DevController extends AbstractController
         ]);
     }
 
-    #[Route('/dev/address', name: 'app_apia')]
-    public function adress(Request $request): Response
+    #[Route('/home', name: 'app_dev_home')]
+    public function home(): Response
     {
-
-        return $this->render('form.html.twig', []);
+        return $this->render('home.html.twig');
     }
-    #[Route('/dev/city', name: 'app_api222',)]
+
+    #[Route('/searchCity', name: 'searchCity', methods: ['POST'])]
     public function city(Request $request): Response
     {
-
-
         $data = $request->request->all();
+        $hxRequest = $request->headers->get('HX-Request');
 
-        $array = $this->api->getCity($data['city']);
+        if (isset($data['city']) && !empty($data['city'])) {
+            $cities = $this->api->getCity($data['city']);
+            return $this->render('/_partial/_select.html.twig', [
+                'cities' => $cities,
+                'hxRequest' => $hxRequest
+            ]);
+        }
 
-        return $this->render(
-            'select.html.twig',
-            [
-                'option' => $array
-            ]
-        );
+        // Zwracamy pusty wynik, jeśli nie znaleziono miasta
+        return new Response('<p>Brak wyników</p>', 200);
     }
 
-    #[Route('/dev/map', name: 'app_api222tesrrrt',)]
+    #[Route('/map', name: 'app_api222tesrrrt',)]
     public function map(Request $request): Response
     {
         $data = $request->request->all();
@@ -106,4 +108,5 @@ class DevController extends AbstractController
         );
     }
 
+   
 }
