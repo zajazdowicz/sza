@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Repository\PoiRepository;
+use App\Repository\POIRepository;
 use Symfony\Component\HttpClient\HttpClient;
 
 class PoiService
