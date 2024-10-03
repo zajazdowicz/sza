@@ -71,4 +71,15 @@ class ApiService
         $content = $response->getContent();
         return $response->toArray();
     }
+
+
+    public function getPunktWithinRadius($lat, $lon, $radius)
+    {
+        $client = HttpClient::create();
+        $query = "[out:json];node(around:$radius,$lat,$lon)[\"amenity\"=\"restaurant\"];out;";
+        $url = "https://overpass-api.de/api/interpreter?data=" . urlencode($query);
+
+        $response = $client->request('GET', $url);
+        return $response->toArray();
+    }
 }

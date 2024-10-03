@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Repository\POIRepository;
+use App\Repository\PoiRepository;
 use Symfony\Component\HttpClient\HttpClient;
 
 class PoiService
@@ -16,4 +16,16 @@ class PoiService
         return $this->PoiRepository->findWizytyokwa($ids);
 
     }
+
+    public function getPunktWithinRadius($lat, $lon, $radius)
+    {
+        return $this->PoiRepository->getPunktWithinRadius($lat, $lon, $radius);
+    }
+
+
+    public function getWizytowkaByCoordinates($lat, $lon, $radius)
+    {
+        return $this->PoiRepository->getPunktWithinRadius($lat, $lon, $radius);
+    }
+
 }

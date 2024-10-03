@@ -36,7 +36,6 @@
     border: 1px solid #ced4da;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 </style>
 {% endblock %}
 
@@ -45,18 +44,17 @@
 {% endblock %}
 
 {% block body %}
-
-<!-- Główna zawartość strony -->
 <div class="container-fluid content-overlay">
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-8 col-lg-6">
-            <!-- Formularz wyszukiwania -->
+			<!-- Mapa Leaflet -->
 			<div id="map"></div>
 
+			<!-- Formularz wyszukiwania -->
 			<div class="p-3">
 				<label for="inputCity" class="form-label">Wpisz nazwę miasta:</label>
 				<input type="text" class="form-control" id="inputCity" name="city"
-					hx-post="{{ path('app_dev_searchCity') }}" 
+					hx-post="{{ path('searchCity') }}" 
 					hx-trigger="keyup changed delay:500ms" 
 					hx-target="#result" 
 					hx-swap="innerHTML" 
@@ -68,14 +66,13 @@
 		</div>
 	</div>
 </div>
-
 {% endblock %}
 
 {% block javascripts %}
 {{ parent() }}
 <script>
     // Inicjalizacja mapy Leaflet
-    var map = L.map('map').setView([52.237049, 21.017532], 7);  // Współrzędne Polski, zoom ustawiony na 6
+    var map = L.map('map').setView([52.237049, 21.017532], 7);  // Współrzędne Polski, zoom ustawiony na 7
 
     // Warstwa mapy OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

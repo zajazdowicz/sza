@@ -1,5 +1,103 @@
 <head>
 	<!-- Styl Leaflet -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+	<!-- Skrypt Leaflet -->
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+
+<!-- Formularz wyszukiwania -->
+<form id="city-search-form" method="POST" action="/map/search">
+    <input type="text" id="city-input" name="city" placeholder="Wpisz miasto" value="{{ city|default('') }}">
+    <button type="submit">Szukaj</button>
+</form>
+
+<!-- Mapa -->
+<div id="map" style="height: 500px;"></div>
+
+<!-- Wizytówki -->
+<div id="result" style="height: 500px;">
+    {% if wizytowka is not empty %}
+        <ul>
+            {% for w in wizytowka %}
+                <li>
+                    <strong>{{ w.name }}</strong>
+                    <p>{{ w.description }}</p>
+                    {% if w.image %}
+                        <img src="/upload/{{ w.image }}" alt="{{ w.name }}" width="100">
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Brak wizytówek do wyświetlenia.</p>
+    {% endif %}
+</div>
+
+<script>
+    const lat = {{ lat|json_encode|raw }};
+    const lon = {{ lon|json_encode|raw }};
+    const wizytowka = {{ wizytowka|map(w => w.toArray())|json_encode()|raw }};
+
+    // Inicjalizacja mapy Leaflet
+    var map = L.map('map').setView([lat, lon], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Dodawanie markerów dla wizytówek
+    wizytowka.forEach(function(element) {
+        let iconUrl = element.image ? '/upload/' + element.image : '/upload/default/marker.png';
+
+        let myIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [40, 40]
+        });
+
+        L.marker([element.lat, element.lon], {icon: myIcon})
+            .addTo(map)
+            .bindPopup(`
+                <strong>${element.name}</strong><br>
+                ${element.description}<br>
+                <img src='/upload/${element.image || 'default/marker.png'}' alt='${element.name}' width="100" />
+            `);
+    });
+</script>
+
+
+<script>
+    // Inicjalizacja mapy Leaflet
+    var map = L.map('map').setView([52.237049, 21.017532], 7);  // Początkowo ustawione na Polskę
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Funkcja do aktualizacji mapy po otrzymaniu nowych danych o miastach
+    function updateMap(lat, lon) {
+        // Zmiana pozycji widoku mapy na współrzędne miasta
+        map.setView([lat, lon], 12);  // Zoom ustawiony na 12
+    }
+
+    // HTMX nasłuchuje na zakończenie requesta i aktualizuje mapę po zmianie miasta
+    document.body.addEventListener('htmx:afterOnLoad', function(evt) {
+        const response = evt.detail.xhr.responseText;
+        
+        // Jeżeli odpowiedź zawiera współrzędne miasta (przykładowo przez ukryte elementy)
+        const latElement = document.querySelector('#lat'); // Dodajemy w widoku ukryte pole z lat
+        const lonElement = document.querySelector('#lon'); // Dodajemy w widoku ukryte pole z lon
+        
+        if (latElement && lonElement) {
+            const lat = parseFloat(latElement.value);
+            const lon = parseFloat(lonElement.value);
+            updateMap(lat, lon);  // Przemieszczamy mapę
+        }
+    });
+</script>
+
+
+
+{# <head>
+	<!-- Styl Leaflet -->
 	<link
 	rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
 	<!-- Skrypt Leaflet -->
@@ -40,4 +138,4 @@ element.image || 'default/marker.png'
 element.name
 }' width="100" />`);
 });
-</script>
+</script> #}

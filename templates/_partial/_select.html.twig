@@ -1,15 +1,80 @@
-{# {{ dump(cities) }} #}
 <div>
-	<h5>Informacje o mieście:</h5>
+	<h5>Informacje o miastach:</h5>
 	{% if cities is not empty %}
-		<ul>
-			{% for city in cities %}
-				<li>{{ city.display_name }}</li>
-				{# Przykład wyświetlenia miasta #}
-			{% endfor %}
-		</ul>
+		<form id="city-form">
+			<ul>
+				{% for city in cities %}
+					<li>
+						<label>
+							<input type="radio" name="selected_city" value="{{ city.lat }},{{ city.lon }}">
+							{{ city.display_name }}
+						</label>
+					</li>
+				{% endfor %}
+			</ul>
+			<button type="submit">Pokaż POI</button>
+		</form>
 	{% else %}
 		<p>Nie znaleziono miasta!</p>
 	{% endif %}
 </div>
 
+<script>
+document.getElementById('city-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const selectedCity = formData.get('selected_city');
+
+    if (selectedCity) {
+        const [lat, lon] = selectedCity.split(',');
+        fetchPOIData(lat, lon);
+    }
+});
+
+function fetchPOIData(lat, lon) {
+
+	console.log(lat, lon);
+
+    fetch('{{ path('app_search_map') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ lat, lon }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateMapWithPOI(data.poi);
+        updateMapWithWizytowka(data.wizytowka);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+function updateMapWithPOI(poi) {
+    poi.forEach(point => {
+        const marker = L.marker([point.lat, point.lon]).addTo(map)
+            .bindPopup(`<strong>${point.name}</strong>`);
+    });
+}
+
+function updateMapWithWizytowka(wizytowka) {
+    wizytowka.forEach(business => {
+        const iconUrl = business.image ? `/upload/${business.image}` : '/upload/default/marker.png';
+        const myIcon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [40, 40]
+        });
+
+        L.marker([business.lat, business.lon], {icon: myIcon}).addTo(map)
+            .bindPopup(`
+                <strong>${business.name}</strong><br>
+                ${business.description}<br>
+                <img src='/upload/${business.image || 'default/marker.png'}' alt='${business.name}' width='100' />
+                <br>Godziny otwarcia: ${business.openingHours}
+            `);
+    });
+}
+
+
+</script>		
