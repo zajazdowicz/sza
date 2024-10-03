@@ -23,12 +23,6 @@ class Address
     #[ORM\Column(length: 62)]
     private ?string $streetNumber = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $startDate = null;
-
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    private ?\DateTimeInterface $stopDate = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -66,30 +60,6 @@ class Address
     public function setStreetNumber(string $streetNumber): static
     {
         $this->streetNumber = $streetNumber;
-
-        return $this;
-    }
-
-    public function getstartDate(): ?\DateTimeInterface
-    {
-        return $this->startDate;
-    }
-
-    public function setstartDate(\DateTimeInterface $startDate): static
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getstopDate(): ?\DateTimeInterface
-    {
-        return $this->stopDate;
-    }
-
-    public function setstopDate(\DateTimeInterface $stopDate): static
-    {
-        $this->stopDate = $stopDate;
 
         return $this;
     }
