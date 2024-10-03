@@ -33,7 +33,8 @@ document.getElementById('city-form').addEventListener('submit', function(e) {
 
 function fetchPOIData(lat, lon) {
 
-	console.log(lat, lon);
+//console.log(lat, lon);
+
 
     fetch('{{ path('app_search_map') }}', {
         method: 'POST',
@@ -44,6 +45,9 @@ function fetchPOIData(lat, lon) {
     })
     .then(response => response.json())
     .then(data => {
+	
+	//console.log(data);
+
         updateMapWithPOI(data.poi);
         updateMapWithWizytowka(data.wizytowka);
     })
@@ -52,7 +56,22 @@ function fetchPOIData(lat, lon) {
 
 
 function updateMapWithPOI(poi) {
-    poi.forEach(point => {
+
+
+	console.log(poi.elements);
+
+    poi.elements.forEach(point => {
+
+		console.log($point);
+		
+
+
+		const iconUrl = point.image ? `/upload/${point.image}` : '/upload/default/marker.png';
+		const myIcon = L.icon({
+			iconUrl: iconUrl,
+			iconSize: [40, 40]
+		});
+
         const marker = L.marker([point.lat, point.lon]).addTo(map)
             .bindPopup(`<strong>${point.name}</strong>`);
     });

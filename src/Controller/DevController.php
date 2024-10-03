@@ -100,78 +100,15 @@ class DevController extends AbstractController
         // Check for matching business cards (wizytowka)
         $wizytkowki = $this->poiService->getWizytowkaByCoordinates($lat, $lon, 10000);
 
+        // dd($wizytkowki);
+        // dd($punkty);
+
         return $this->json([
             'poi' => $punkty,
             'wizytowka' => $wizytkowki
         ]);
     }
 
-
-
-
-
-
-    // #[Route('/map', name: 'app_api222tesrrrt',)]
-    // public function map(Request $request): Response
-    // {
-    //     $data = $request->request->all();
-    //     $decodedData = json_decode($data['dataCity'], true);
-
-    //     $north = $decodedData['info'][0]; // Północ
-    //     $south = $decodedData['info'][1]; // Południe
-    //     $east = $decodedData['info'][2]; // Wschód
-    //     $west = $decodedData['info'][3]; // Zachód
-
-    //     // Pobranie punktów na podstawie współrzędnych
-    //     $punkty = $this->api->getPunkt($north, $east, $south, $west);
-
-    //     // Przygotowanie identyfikatorów i danych początkowych
-    //     $ids = [];
-    //     $onlyIds = [];
-
-    //     foreach ($punkty['elements'] as $element) {
-    //         if (!empty($element['tags']['name'])) {
-    //             $ids[$element['id']] = [$element['lat'], $element['lon'], $element['tags']['name']];
-    //             $onlyIds[] = $element['id'];
-    //         }
-    //     }
-
-    //     // Pobranie wizytówek
-    //     $wizytkowki = $this->poiService->getWizytowka($onlyIds);
-    //     $wizytowkaList = [];
-
-    //     // Przekształcenie danych z wizytówki i dopasowanie do punktów
-    //     foreach ($wizytkowki as $wizytkowka) {
-    //         $id = $wizytkowka->getIdOpenstreetmap();
-    //         if (isset($ids[$id])) {
-    //             $wizytowkaList[] = new Wizytowka(
-    //                 $wizytkowka->getLat(),
-    //                 $wizytkowka->getLon(),
-    //                 $id,
-    //                 $wizytkowka->getNameRestaurant(),
-    //                 $wizytkowka->getDescription(),
-    //                 $wizytkowka->getImage(),
-    //                 true
-    //             );
-    //             unset($ids[$id]);
-    //         }
-    //     }
-
-    //     // Dodanie pozostałych punktów bez wizytówki
-    //     foreach ($ids as $id => $point) {
-    //         $wizytowkaList[] = new Wizytowka($point[0], $point[1], null, $point[2]);
-    //     }
-
-    //     // Renderowanie widoku z danymi
-    //     return $this->render(
-    //         'map.html.twig',
-    //         [
-    //             'lat' => $decodedData['lat'],
-    //             'lon' => $decodedData['lon'],
-    //             'wizytowka' => $wizytowkaList,
-    //         ]
-    //     );
-    // }
 
    
 }
