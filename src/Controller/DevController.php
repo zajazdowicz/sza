@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/dev', name: 'app_dev_')]
 
 class DevController extends AbstractController
-{
+{ 
     public function __construct(private ApiService $api, private PoiService $poiService) {}
     public function index(): Response
     {
