@@ -29,9 +29,12 @@ class RestaurantDetails
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
 
-    #[ORM\OneToOne(inversedBy: 'restaurantDetails', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Poi $Poi = null;
+    #[ORM\OneToOne(mappedBy: 'restaurantDetails', cascade: ['persist', 'remove'])]
+    private ?Poi $poi = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
 
     public function getId(): ?int
     {
@@ -100,12 +103,34 @@ class RestaurantDetails
 
     public function getPoi(): ?Poi
     {
-        return $this->Poi;
+        return $this->poi;
     }
 
-    public function setPoi(Poi $Poi): static
+    public function setPoi(?Poi $poi): static
     {
-        $this->Poi = $Poi;
+        // unset the owning side of the relation if necessary
+        if ($poi === null && $this->poi !== null) {
+            $this->poi->setRestaurantDetails(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($poi !== null && $poi->getRestaurantDetails() !== $this) {
+            $poi->setRestaurantDetails($this);
+        }
+
+        $this->poi = $poi;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

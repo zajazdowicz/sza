@@ -13,7 +13,7 @@ class Poi
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'bigint')]
     private ?int $id = null;
     
     #[ORM\Column(length: 255, nullable: true)]
@@ -22,10 +22,7 @@ class Poi
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lon = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $id_openstreetmap = null;
-
-    #[ORM\OneToOne(mappedBy: 'Poi', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'poi', cascade: ['persist', 'remove'])]
     private ?RestaurantDetails $restaurantDetails = null;
 
 
@@ -57,29 +54,13 @@ class Poi
         return $this;
     }
 
-    public function getIdOpenstreetmap(): ?string
-    {
-        return $this->id_openstreetmap;
-    }
-
-    public function setIdOpenstreetmap(string $id_openstreetmap): static
-    {
-        $this->id_openstreetmap = $id_openstreetmap;
-        return $this;
-    }
-
     public function getRestaurantDetails(): ?RestaurantDetails
     {
         return $this->restaurantDetails;
     }
 
-    public function setRestaurantDetails(RestaurantDetails $restaurantDetails): static
+    public function setRestaurantDetails(?RestaurantDetails $restaurantDetails): static
     {
-        // set the owning side of the relation if necessary
-        if ($restaurantDetails->getPoi() !== $this) {
-            $restaurantDetails->setPoi($this);
-        }
-
         $this->restaurantDetails = $restaurantDetails;
 
         return $this;

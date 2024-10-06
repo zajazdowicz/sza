@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Poi;
 use App\Entity\RestaurantDetails;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,6 +15,19 @@ class RestaurantDetailsRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RestaurantDetails::class);
+    } 
+        public function findWizytowka(int $id): ?RestaurantDetails
+    {
+        return $this->createQueryBuilder('r')
+            ->join(
+                Poi::class,
+                'p',
+                'WITH',
+                'p.id = :id'
+            )
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     //    /**

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\RestaurantDetails;
 use App\Entity\Wizytowka;
 use App\Service\ApiService;
 use App\Service\PoiService;
+use App\Service\RestaurantDetailsService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -15,7 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DevController extends AbstractController
 {
-    public function __construct(private ApiService $api, private PoiService $poiService) {}
+    public function __construct(
+    private ApiService $api,
+    private PoiService $poiService,
+    private RestaurantDetailsService $restaurantDetailsService
+    ) {}
     public function index(): Response
     {
         return $this->render('dev/index.html.twig', [
@@ -109,6 +115,22 @@ class DevController extends AbstractController
         ]);
     }
 
+#[Route('/wizytowka', name: 'app_wizytowka', methods: ['GET'])]
+    public function getWizytowka(): Response
+    {
 
+       $wizytowka = $this->restaurantDetailsService->getWizytowka(123423);
+
+        return $this->render('/wizytowka.html.twig', [
+                'name' => $wizytowka->getSlug()
+            ]);
+        return new Response("test");
+    }
+    #[Route('/menu/{slug}', name: 'app_menu', methods: ['GET'])]
+    public function getMenu(Request $request, RestaurantDetails  $restaurantDetails): Response
+    {
+       dd($restaurantDetails);
+        return new Response("test");
+    }
    
 }
