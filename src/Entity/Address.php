@@ -23,6 +23,9 @@ class Address
     #[ORM\Column(length: 62)]
     private ?string $streetNumber = null;
 
+    #[ORM\OneToOne(mappedBy: 'address', cascade: ['persist', 'remove'])]
+    private ?RestaurantDetails $restaurantDetails = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,28 @@ class Address
     public function setStreetNumber(string $streetNumber): static
     {
         $this->streetNumber = $streetNumber;
+
+        return $this;
+    }
+
+    public function getRestaurantDetails(): ?RestaurantDetails
+    {
+        return $this->restaurantDetails;
+    }
+
+    public function setRestaurantDetails(?RestaurantDetails $restaurantDetails): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($restaurantDetails === null && $this->restaurantDetails !== null) {
+            $this->restaurantDetails->setAddress(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($restaurantDetails !== null && $restaurantDetails->getAddress() !== $this) {
+            $restaurantDetails->setAddress($this);
+        }
+
+        $this->restaurantDetails = $restaurantDetails;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RestaurantDetailsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,27 @@ class RestaurantDetails
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
+
+    /**
+     * @var Collection<int, CategoryKitchen>
+     */
+    #[ORM\ManyToMany(targetEntity: CategoryKitchen::class, inversedBy: 'restaurantDetails')]
+    private Collection $categoryKitchen;
+
+    #[ORM\OneToOne(inversedBy: 'restaurantDetails', cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
+
+    /**
+     * @var Collection<int, RestaurantOpinions>
+     */
+    #[ORM\ManyToMany(targetEntity: RestaurantOpinions::class, inversedBy: 'restaurantDetails')]
+    private Collection $restaurantOpinions;
+
+    public function __construct()
+    {
+        $this->categoryKitchen = new ArrayCollection();
+        $this->restaurantOpinions = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -131,6 +154,66 @@ class RestaurantDetails
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CategoryKitchen>
+     */
+    public function getCategoryKitchen(): Collection
+    {
+        return $this->categoryKitchen;
+    }
+
+    public function addCategoryKitchen(CategoryKitchen $categoryKitchen): static
+    {
+        if (!$this->categoryKitchen->contains($categoryKitchen)) {
+            $this->categoryKitchen->add($categoryKitchen);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryKitchen(CategoryKitchen $categoryKitchen): static
+    {
+        $this->categoryKitchen->removeElement($categoryKitchen);
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RestaurantOpinions>
+     */
+    public function getRestaurantOpinions(): Collection
+    {
+        return $this->restaurantOpinions;
+    }
+
+    public function addRestaurantOpinion(RestaurantOpinions $restaurantOpinion): static
+    {
+        if (!$this->restaurantOpinions->contains($restaurantOpinion)) {
+            $this->restaurantOpinions->add($restaurantOpinion);
+        }
+
+        return $this;
+    }
+
+    public function removeRestaurantOpinion(RestaurantOpinions $restaurantOpinion): static
+    {
+        $this->restaurantOpinions->removeElement($restaurantOpinion);
 
         return $this;
     }
