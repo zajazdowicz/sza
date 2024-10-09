@@ -129,8 +129,8 @@ class DevController extends AbstractController
     #[Route('/menu/{slug}', name: 'app_menu', methods: ['GET'])]
     public function getMenu(Request $request, RestaurantDetails  $restaurantDetails): Response
     {
-       dd($restaurantDetails);
-        return new Response("test");
+       dd($restaurantDetails->getRestaurantCategory());
+            return new Response("test");
     }
    
 }

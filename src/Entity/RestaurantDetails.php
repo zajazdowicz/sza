@@ -52,10 +52,27 @@ class RestaurantDetails
     #[ORM\ManyToMany(targetEntity: RestaurantOpinions::class, inversedBy: 'restaurantDetails')]
     private Collection $restaurantOpinions;
 
+    /**
+     * @var Collection<int, TypePayment>
+     */
+    #[ORM\ManyToMany(targetEntity: TypePayment::class, inversedBy: 'restaurantDetails')]
+    private Collection $typePayments;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?RestaurantContactDetails $restaurantContactDetails = null;
+
+    /**
+     * @var Collection<int, RestaurantCategory>
+     */
+    #[ORM\ManyToMany(targetEntity: RestaurantCategory::class, inversedBy: 'restaurantDetails', fetch:"EAGER")]
+    private Collection $restaurantCategory;
+
     public function __construct()
     {
         $this->categoryKitchen = new ArrayCollection();
         $this->restaurantOpinions = new ArrayCollection();
+        $this->typePayments = new ArrayCollection();
+        $this->restaurantCategory = new ArrayCollection();
     }
 
 
@@ -214,6 +231,66 @@ class RestaurantDetails
     public function removeRestaurantOpinion(RestaurantOpinions $restaurantOpinion): static
     {
         $this->restaurantOpinions->removeElement($restaurantOpinion);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TypePayment>
+     */
+    public function getTypePayments(): Collection
+    {
+        return $this->typePayments;
+    }
+
+    public function addTypePayment(TypePayment $typePayment): static
+    {
+        if (!$this->typePayments->contains($typePayment)) {
+            $this->typePayments->add($typePayment);
+        }
+
+        return $this;
+    }
+
+    public function removeTypePayment(TypePayment $typePayment): static
+    {
+        $this->typePayments->removeElement($typePayment);
+
+        return $this;
+    }
+
+    public function getRestaurantContactDetails(): ?RestaurantContactDetails
+    {
+        return $this->restaurantContactDetails;
+    }
+
+    public function setRestaurantContactDetails(?RestaurantContactDetails $restaurantContactDetails): static
+    {
+        $this->restaurantContactDetails = $restaurantContactDetails;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RestaurantCategory>
+     */
+    public function getRestaurantCategory(): Collection
+    {
+        return $this->restaurantCategory;
+    }
+
+    public function addRestaurantCategory(RestaurantCategory $restaurantCategory): static
+    {
+        if (!$this->restaurantCategory->contains($restaurantCategory)) {
+            $this->restaurantCategory->add($restaurantCategory);
+        }
+
+        return $this;
+    }
+
+    public function removeRestaurantCategory(RestaurantCategory $restaurantCategory): static
+    {
+        $this->restaurantCategory->removeElement($restaurantCategory);
 
         return $this;
     }

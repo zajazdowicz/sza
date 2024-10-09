@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SizeProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SizeProductRepository::class)]
@@ -18,6 +20,17 @@ class SizeProduct
 
     #[ORM\Column(length: 64)]
     private ?string $type = null;
+
+    /**
+     * @var Collection<int, PricesIngredient>
+     */
+    #[ORM\ManyToMany(targetEntity: PricesIngredient::class, mappedBy: 'sizeProduct')]
+    private Collection $pricesIngredients;
+
+    public function __construct()
+    {
+        $this->pricesIngredients = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +57,33 @@ class SizeProduct
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PricesIngredient>
+     */
+    public function getPricesIngredients(): Collection
+    {
+        return $this->pricesIngredients;
+    }
+
+    public function addPricesIngredient(PricesIngredient $pricesIngredient): static
+    {
+        if (!$this->pricesIngredients->contains($pricesIngredient)) {
+            $this->pricesIngredients->add($pricesIngredient);
+            $pricesIngredient->addSizeProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removePricesIngredient(PricesIngredient $pricesIngredient): static
+    {
+        if ($this->pricesIngredients->removeElement($pricesIngredient)) {
+            $pricesIngredient->removeSizeProduct($this);
+        }
 
         return $this;
     }
