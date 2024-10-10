@@ -129,7 +129,16 @@ class DevController extends AbstractController
     #[Route('/menu/{slug}', name: 'app_menu', methods: ['GET'])]
     public function getMenu(Request $request, RestaurantDetails  $restaurantDetails): Response
     {
-       dd($restaurantDetails->getRestaurantCategory());
+       
+       foreach ($restaurantDetails->getRestaurantCategory() as  $category) {
+        foreach($category->getProduct() as $products)
+        {
+            echo $products->getName();
+            foreach ($products->getPricesProduct() as $price) {
+                echo   $price->getPrice();
+            }
+        }
+       }
             return new Response("test");
     }
    

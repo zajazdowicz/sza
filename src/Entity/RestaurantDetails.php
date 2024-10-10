@@ -64,7 +64,7 @@ class RestaurantDetails
     /**
      * @var Collection<int, RestaurantCategory>
      */
-    #[ORM\ManyToMany(targetEntity: RestaurantCategory::class, inversedBy: 'restaurantDetails', fetch:"EAGER")]
+    #[ORM\ManyToMany(targetEntity: RestaurantCategory::class, inversedBy: 'restaurantDetails')]
     private Collection $restaurantCategory;
 
     public function __construct()

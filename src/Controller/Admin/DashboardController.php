@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\POI;
+use App\Entity\Poi;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -35,8 +35,8 @@ class DashboardController extends BackendDashboardController
             MenuItem::linkToCrud(
                 'POI',
                 'fa-regular fa-file-lines',
-                POI::class
-            )->setController(POICrudController::class),
+                Poi::class
+            )->setController(PoiCrudController::class),
             // MenuItem::linkToCrud(
             //     'Polecane produkty',
             //     'fa-regular fa-file-lines',

@@ -2,17 +2,17 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\POI;
+use App\Entity\Poi;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class POICrudController extends AbstractCrudController
+class PoiCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return POI::class;
+        return Poi::class;
     }
 
 
@@ -20,7 +20,7 @@ class POICrudController extends AbstractCrudController
     {
         return [
             // IdField::new(propertyName: 'id'),
-            TextField::new(propertyName: 'name'),
+            TextField::new('lat'),
             //TextEditorField::new('description'),
         ];
     }
