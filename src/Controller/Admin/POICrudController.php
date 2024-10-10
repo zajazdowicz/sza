@@ -19,9 +19,9 @@ class PoiCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            // IdField::new(propertyName: 'id'),
+            TextField::new('restaurantDetails'),
             TextField::new('lat'),
-            //TextEditorField::new('description'),
+            TextField::new('lon'),
         ];
     }
 }
