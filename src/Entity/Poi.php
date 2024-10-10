@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\POIRepository;
+use App\Repository\PoiRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: POIRepository::class)]
+#[ORM\Entity(repositoryClass: PoiRepository::class)]
 class Poi
 {
     #[ORM\Id]
