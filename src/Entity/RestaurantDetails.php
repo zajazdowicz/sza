@@ -73,6 +73,7 @@ class RestaurantDetails
         $this->restaurantOpinions = new ArrayCollection();
         $this->typePayments = new ArrayCollection();
         $this->restaurantCategory = new ArrayCollection();
+        $this->restaurantContactDetails = new RestaurantContactDetails();
     }
 
 

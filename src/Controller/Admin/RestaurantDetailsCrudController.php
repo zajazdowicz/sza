@@ -38,12 +38,12 @@ class RestaurantDetailsCrudController extends AbstractCrudController
             return [
                 FormField::addTab('Podstawowe'),
                 TextField::new('nameRestaurant', "Nazwa restauracji"),
-                TextField::new('restaurantContactDetails.tin', "Nip"),
                 NumberField::new('averageOpinion', "Średnia ocen")->setDisabled(),
                 NumberField::new('minPurchaseAmount', "Minimalna kwota zakupu"),
                 TextField::new('minDeliveryAmount', "Minimalna kwota dostawy"),
                 ImageField::new('logo', "Logo")->setUploadDir("/public/assets/images/logo"),
                 FormField::addTab('Dane kontaktowe'),
+                TextField::new('restaurantContactDetails.tin', "Nip"),
                 TextField::new('restaurantContactDetails.phoneSms', "Numer podstawowy"),
                 TextField::new('restaurantContactDetails.phoneSms2', "Numer rezerwowy"),
                 TextField::new('restaurantContactDetails.phoneOwner', "Numer właściciela"),
@@ -53,15 +53,5 @@ class RestaurantDetailsCrudController extends AbstractCrudController
             ];
         }
     }
-    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
-{
-    if ($entityInstance instanceof RestaurantDetails) {
-        $restaurantContactDetails = new RestaurantContactDetails();
-        $entityInstance->setRestaurantContactDetails($restaurantContactDetails);
-        
-    }
-
-    parent::persistEntity($entityManager, $entityInstance);
-}
     
 }
