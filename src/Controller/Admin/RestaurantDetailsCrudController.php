@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\RestaurantContactDetails;
 use App\Entity\RestaurantDetails;
+use App\Form\OpenHoursType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -43,15 +44,40 @@ class RestaurantDetailsCrudController extends AbstractCrudController
                 TextField::new('minDeliveryAmount', "Minimalna kwota dostawy"),
                 ImageField::new('logo', "Logo")->setUploadDir("/public/assets/images/logo"),
                 FormField::addTab('Dane kontaktowe'),
-                TextField::new('restaurantContactDetails.tin', "Nip"),
+                TextField::new('address.city', "Miasto"),
+                TextField::new('address.street', "Ulica"),
+                TextField::new('address.streetNumber', "Numer ulicy"),
                 TextField::new('restaurantContactDetails.phoneSms', "Numer podstawowy"),
                 TextField::new('restaurantContactDetails.phoneSms2', "Numer rezerwowy"),
                 TextField::new('restaurantContactDetails.phoneOwner', "Numer właściciela"),
                 FormField::addTab('Ustaw kategorie'),
-                AssociationField::new('categoryKitchen')
+                AssociationField::new('categoryKitchen'),
+                FormField::addTab('Godziny otwarcia'),
+                CollectionField::new('openingHours', "Godziny otwarcia")
+                ->setEntryType(OpenHoursType::class)
+                ->allowAdd(true)
+                ->allowDelete(true),
+
                 
             ];
         }
     }
-    
+        public function updateEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
+    {
+        /** @var RestaurantDetails $entityInstance */
+        $entityInstance = $entityInstance;
+
+        $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function persistEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
+    {
+        /** @var ProductListCustom $entityInstance */
+        $entityInstance = $entityInstance;
+
+        $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
+        parent::updateEntity($entityManager, $entityInstance);
+    }
+
 }

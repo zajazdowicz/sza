@@ -67,6 +67,12 @@ class RestaurantDetails
     #[ORM\ManyToMany(targetEntity: RestaurantCategory::class, inversedBy: 'restaurantDetails')]
     private Collection $restaurantCategory;
 
+    /**
+     * @var Collection<int, RestaurantOpeningHours>
+     */
+    #[ORM\ManyToMany(targetEntity: RestaurantOpeningHours::class, inversedBy: 'restaurantDetails', cascade: ['persist', 'remove'])]
+    private Collection $openingHours;
+
     public function __construct()
     {
         $this->categoryKitchen = new ArrayCollection();
@@ -74,6 +80,8 @@ class RestaurantDetails
         $this->typePayments = new ArrayCollection();
         $this->restaurantCategory = new ArrayCollection();
         $this->restaurantContactDetails = new RestaurantContactDetails();
+        $this->address = new Address();
+        $this->openingHours = new ArrayCollection();
     }
 
 
@@ -299,4 +307,28 @@ class RestaurantDetails
     {
         return $this->nameRestaurant;
     }
+
+        /**
+         * @return Collection<int, RestaurantOpeningHours>
+         */
+        public function getOpeningHours(): Collection
+        {
+            return $this->openingHours;
+        }
+
+        public function addOpeningHour(RestaurantOpeningHours $openingHour): static
+        {
+            if (!$this->openingHours->contains($openingHour)) {
+                $this->openingHours->add($openingHour);
+            }
+
+            return $this;
+        }
+
+        public function removeOpeningHour(RestaurantOpeningHours $openingHour): static
+        {
+            $this->openingHours->removeElement($openingHour);
+
+            return $this;
+        }
 }

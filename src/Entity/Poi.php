@@ -65,4 +65,8 @@ class Poi
 
         return $this;
     }
+    public function setId(int $id): int
+    {
+        return $this->id = $id;
+    }
 }

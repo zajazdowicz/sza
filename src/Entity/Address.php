@@ -14,13 +14,13 @@ class Address
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $street = null;
 
-    #[ORM\Column(length: 62)]
+    #[ORM\Column(length: 62, nullable: true)]
     private ?string $streetNumber = null;
 
     #[ORM\OneToOne(mappedBy: 'address', cascade: ['persist', 'remove'])]
@@ -36,7 +36,7 @@ class Address
         return $this->city;
     }
 
-    public function setCity(string $city): static
+    public function setCity(?string $city): static
     {
         $this->city = $city;
 
@@ -48,7 +48,7 @@ class Address
         return $this->street;
     }
 
-    public function setStreet(string $street): static
+    public function setStreet(?string $street): static
     {
         $this->street = $street;
 
@@ -60,7 +60,7 @@ class Address
         return $this->streetNumber;
     }
 
-    public function setStreetNumber(string $streetNumber): static
+    public function setStreetNumber(?string $streetNumber): static
     {
         $this->streetNumber = $streetNumber;
 
