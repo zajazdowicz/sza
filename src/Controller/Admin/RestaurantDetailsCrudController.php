@@ -39,6 +39,7 @@ class RestaurantDetailsCrudController extends AbstractCrudController
             return [
                 FormField::addTab('Podstawowe'),
                 TextField::new('nameRestaurant', "Nazwa restauracji"),
+                TextField::new('restaurantContactDetails.tin', "Nip"),
                 NumberField::new('averageOpinion', "Średnia ocen")->setDisabled(),
                 NumberField::new('minPurchaseAmount', "Minimalna kwota zakupu"),
                 TextField::new('minDeliveryAmount', "Minimalna kwota dostawy"),
