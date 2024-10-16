@@ -29,7 +29,15 @@ class RestaurantDetailsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
+    public function findRestauranByCustomerId(int $id): ?RestaurantDetails
+    {
+         return $this->createQueryBuilder('r')
+               ->andWhere('r.customer = :id')
+               ->setParameter('id', $id)
+               ->getQuery()
+               ->getOneOrNullResult()
+           ;
+    }
     //    /**
     //     * @return RestaurantDetails[] Returns an array of RestaurantDetails objects
     //     */

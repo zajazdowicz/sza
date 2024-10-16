@@ -37,7 +37,7 @@ class DashboardController extends BackendDashboardController
                 'fa-regular fa-file-lines',
                 Poi::class
             )->setController(PoiCrudController::class),
-                        MenuItem::linkToCrud(
+            MenuItem::linkToCrud(
                 'Dane restauracji',
                 'fa-regular fa-file-lines',
                 RestaurantDetails::class

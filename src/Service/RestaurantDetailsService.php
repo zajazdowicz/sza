@@ -16,4 +16,10 @@ class RestaurantDetailsService
     {
         return $this->restaurantDetailsRepository->findWizytowka($id);
     }
+    public function getRestauranByCustomerId(int $id): RestaurantDetails
+    {
+        return $this->restaurantDetailsRepository->findRestauranByCustomerId($id);
+    }
+
+    
 }
