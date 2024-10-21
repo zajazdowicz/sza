@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\DashboardController as BackendDashboardController;
+use App\Entity\RestaurantCategory;
 use App\Entity\RestaurantDetails;
 
 class DashboardController extends BackendDashboardController
@@ -47,11 +48,11 @@ class DashboardController extends BackendDashboardController
                 'fa-regular fa-file-lines',
                 RestaurantDetails::class
             )->setController(RestaurantDetails2CrudController::class),
-            // MenuItem::linkToCrud(
-            //     'Polecane produkty',
-            //     'fa-regular fa-file-lines',
-            //     FeaturedProducts::class
-            // )->setController(FeaturedProductsCrudController::class),
+            MenuItem::linkToCrud(
+                'Kategorie i menu  z category',
+                'fa-regular fa-file-lines',
+                RestaurantCategory::class
+            )->setController(RestaurantCategoryCrudController::class),
             // MenuItem::linkToCrud(
             //     'Komunikaty na hurton',
             //     'fa-regular fa-file-lines',

@@ -19,7 +19,7 @@ class Ingredients
     private ?string $name = null;
 
     #[ORM\Column]
-    private ?bool $isAddon = null;
+    private ?bool $isAddon = false;
 
     /**
      * @var Collection<int, Product>
@@ -30,8 +30,11 @@ class Ingredients
     /**
      * @var Collection<int, PricesIngredient>
      */
-    #[ORM\ManyToMany(targetEntity: PricesIngredient::class, inversedBy: 'ingredients')]
+    #[ORM\ManyToMany(targetEntity: PricesIngredient::class, inversedBy: 'ingredients', cascade: ['persist', 'remove'])]
     private Collection $prices;
+
+    #[ORM\ManyToOne(inversedBy: 'ingredients')]
+    private ?RestaurantCategory $restaurantCategory = null;
 
     public function __construct()
     {
@@ -61,11 +64,15 @@ class Ingredients
         return $this->isAddon;
     }
 
-    public function setAddon(bool $isAddon): static
+    public function setIsAddon(bool $isAddon): static
     {
         $this->isAddon = $isAddon;
 
         return $this;
+    }
+        public function getIsAddon(): bool
+    {
+        return $this->isAddon;
     }
 
     /**
@@ -115,6 +122,18 @@ class Ingredients
     public function removePrice(PricesIngredient $price): static
     {
         $this->prices->removeElement($price);
+
+        return $this;
+    }
+
+    public function getRestaurantCategory(): ?RestaurantCategory
+    {
+        return $this->restaurantCategory;
+    }
+
+    public function setRestaurantCategory(?RestaurantCategory $restaurantCategory): static
+    {
+        $this->restaurantCategory = $restaurantCategory;
 
         return $this;
     }

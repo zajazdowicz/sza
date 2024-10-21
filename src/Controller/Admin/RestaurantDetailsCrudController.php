@@ -79,22 +79,15 @@ class RestaurantDetailsCrudController extends AbstractCrudController
             ];
         }
     }
-        public function updateEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
-    {
-        /** @var RestaurantDetails $entityInstance */
-        $entityInstance = $entityInstance;
+    //     public function updateEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
+    // {
+    //     // /** @var RestaurantDetails $entityInstance */
+    //     // $entityInstance = $entityInstance;
 
-        $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
-        parent::updateEntity($entityManager, $entityInstance);
-    }
+    //     // $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
+    //     // parent::updateEntity($entityManager, $entityInstance);
+    // }
 
-    public function persistEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
-    {
-        /** @var ProductListCustom $entityInstance */
-        $entityInstance = $entityInstance;
 
-        $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
-        parent::updateEntity($entityManager, $entityInstance);
-    }
 
 }

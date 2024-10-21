@@ -16,6 +16,28 @@ class IngredientsRepository extends ServiceEntityRepository
         parent::__construct($registry, Ingredients::class);
     }
 
+           /**
+        * @return Ingredients[] Returns an array of Ingredients objects
+        */
+       public function findtIngredientsByNames(array $value): array
+       {
+           return $this->createQueryBuilder('i')
+               ->andWhere('i.name in (:val)')
+               ->setParameter('val', $value)
+               ->setMaxResults(10)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
+       public function save(Ingredients $ingredients, bool $flush = false): void
+    {
+        $this->_em->persist($ingredients);
+
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+
     //    /**
     //     * @return Ingredients[] Returns an array of Ingredients objects
     //     */
