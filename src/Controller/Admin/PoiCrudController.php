@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Poi;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -35,10 +37,21 @@ class PoiCrudController extends AbstractCrudController
     {
         return [
             IntegerField::new('id'),
-            TextField::new('restaurantDetails'),
             TextField::new('lat'),
             TextField::new('lon'),
             
         ];
     }
+    public function persistEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
+{
+    /** @var Poi $entityInstance */
+        $entityInstance = $entityInstance;
+        $currentUser = $this->getUser();
+            if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
+                if($currentUser->getRestaurantDetails() != null){
+                     $entityInstance->setRestaurantDetails($currentUser->getRestaurantDetails());
+                }
+            }
+        parent::updateEntity($entityManager, $entityInstance);
+}
 }

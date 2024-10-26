@@ -123,14 +123,12 @@ class RestaurantDetailsCrudController extends AbstractCrudController
         /** @var RestaurantDetails $entityInstance */
         $entityInstance = $entityInstance;
         $currentUser = $this->getUser();
-    if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
+            if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
 
-        $entityInstance->addUser($currentUser);
-    }
+                $entityInstance->addUser($currentUser);
+            }
 
-    
         $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
-      
         parent::updateEntity($entityManager, $entityInstance);
     }
 
