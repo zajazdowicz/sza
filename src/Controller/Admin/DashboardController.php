@@ -43,11 +43,11 @@ class DashboardController extends BackendDashboardController
                 'fa-regular fa-file-lines',
                 RestaurantDetails::class
             )->setController(RestaurantDetailsCrudController::class),
-             MenuItem::linkToCrud(
-                'Kategorie i menu',
-                'fa-regular fa-file-lines',
-                RestaurantDetails::class
-            )->setController(RestaurantDetails2CrudController::class),
+            //  MenuItem::linkToCrud(
+            //     'Kategorie i menu',
+            //     'fa-regular fa-file-lines',
+            //     RestaurantDetails::class
+            // )->setController(RestaurantDetails2CrudController::class),
             MenuItem::linkToCrud(
                 'Kategorie i menu  z category',
                 'fa-regular fa-file-lines',

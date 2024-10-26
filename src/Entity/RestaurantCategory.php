@@ -21,7 +21,7 @@ class RestaurantCategory
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'boolean')]
     private ?bool $isActive = false;
 
     /**
@@ -51,7 +51,7 @@ class RestaurantCategory
     /**
      * @var Collection<int, SizeProduct>
      */
-    #[ORM\OneToMany(targetEntity: SizeProduct::class, mappedBy: 'restaurantCategory')]
+    #[ORM\OneToMany(targetEntity: SizeProduct::class, mappedBy: 'restaurantCategory', cascade: ['persist'])]
     private Collection $sizeProduct;
 
 
@@ -99,7 +99,7 @@ class RestaurantCategory
         return $this->isActive;
     }
 
-    public function setActive(bool $isActive): static
+    public function setActive(?bool $isActive): static
     {
         $this->isActive = $isActive;
 

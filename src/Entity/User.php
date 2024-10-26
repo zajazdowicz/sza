@@ -34,14 +34,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'users')]
-    // private ?RestaurantDetails $restaurantDetails = null;
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?RestaurantDetails $restaurantDetails = null;
 
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\ManyToOne(inversedBy: 'User')]
-    private ?Customer $customer = null;
+    // #[ORM\ManyToOne(inversedBy: 'User')]
+    // private ?Customer $customer = null;
 
     public function getId(): ?int
     {
@@ -118,17 +118,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    // public function getRestaurantDetails(): ?RestaurantDetails
-    // {
-    //     return $this->restaurantDetails;
-    // }
+    public function getRestaurantDetails(): ?RestaurantDetails
+    {
+        return $this->restaurantDetails;
+    }
 
-    // public function setRestaurantDetails(?RestaurantDetails $restaurantDetails): static
-    // {
-    //     $this->restaurantDetails = $restaurantDetails;
+    public function setRestaurantDetails(?RestaurantDetails $restaurantDetails): static
+    {
+        $this->restaurantDetails = $restaurantDetails;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     public function isVerified(): bool
     {
@@ -142,15 +142,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): static
-    {
-        $this->customer = $customer;
-
-        return $this;
-    }
 }

@@ -30,16 +30,16 @@ class Customer
     #[ORM\OneToMany(targetEntity: RestaurantDetails::class, mappedBy: 'customer')]
     private Collection $restaurantDetails;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'customer')]
-    private Collection $user;
+    // /**
+    //  * @var Collection<int, User>
+    //  */
+    // #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'customer')]
+    // private Collection $user;
 
     public function __construct()
     {
         $this->restaurantDetails = new ArrayCollection();
-        $this->user = new ArrayCollection();
+        //$this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,33 +113,33 @@ class Customer
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
+    // /**
+    //  * @return Collection<int, User>
+    //  */
+    // public function getUser(): Collection
+    // {
+    //     return $this->user;
+    // }
 
-    public function addUser(User $user): static
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-            $user->setCustomer($this);
-        }
+    // public function addUser(User $user): static
+    // {
+    //     if (!$this->user->contains($user)) {
+    //         $this->user->add($user);
+    //         $user->setCustomer($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeUser(User $user): static
-    {
-        if ($this->user->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getCustomer() === $this) {
-                $user->setCustomer(null);
-            }
-        }
+    // public function removeUser(User $user): static
+    // {
+    //     if ($this->user->removeElement($user)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($user->getCustomer() === $this) {
+    //             $user->setCustomer(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

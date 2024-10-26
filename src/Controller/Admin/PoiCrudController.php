@@ -27,8 +27,7 @@ class PoiCrudController extends AbstractCrudController
         
         return  parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
         ->join('entity.restaurantDetails', 'r')
-        ->join('r.customer', 'c')
-        ->join('c.user', 'u')
+        ->join('r.users', 'u')
         ->andWhere('u.id = :user')
         ->setParameter('user', $this->getUser());
     }
@@ -36,7 +35,7 @@ class PoiCrudController extends AbstractCrudController
     {
         return [
             IntegerField::new('id'),
-            AssociationField::new('restaurantDetails'),
+            TextField::new('restaurantDetails'),
             TextField::new('lat'),
             TextField::new('lon'),
             

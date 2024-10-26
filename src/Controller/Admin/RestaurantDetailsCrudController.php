@@ -4,14 +4,18 @@ namespace App\Controller\Admin;
 
 use App\Entity\RestaurantContactDetails;
 use App\Entity\RestaurantDetails;
+use App\Entity\User;
 use App\Form\OpenHoursType;
 use Doctrine\ORM\EntityManagerInterface;
 
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -24,13 +28,22 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
-
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class RestaurantDetailsCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
         return RestaurantDetails::class;
+    }
+    
+    
+
+    // Wstrzyknięcie AdminUrlGenerator przez konstruktor
+    public function __construct(private AdminUrlGenerator $adminUrlGenerator, private EntityManagerInterface $entityManager)
+    {
+        
     }
   public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
@@ -41,7 +54,21 @@ class RestaurantDetailsCrudController extends AbstractCrudController
         ->andWhere('u.id = :user')
         ->setParameter('user', $this->getUser());
     }
-    
+
+
+    public function index(AdminContext $context)
+    {
+      
+                $firstRecord = $this->entityManager->getRepository(RestaurantDetails::class)->findOneBy([]);
+           $url = $this->adminUrlGenerator
+            ->setController(self::class)
+            ->setAction('edit') // Ustawiamy akcję tworzenia nowego rekordu
+            ->setEntityId($firstRecord->getId()) 
+            ->generateUrl();
+
+        return $this->redirect($url);
+    }
+
     public function configureFields(string $pageName): iterable
     {
   
@@ -79,14 +106,23 @@ class RestaurantDetailsCrudController extends AbstractCrudController
             ];
         }
     }
-    //     public function updateEntity(EntityManagerInterface $entityManager, mixed $entityInstance): void
-    // {
-    //     // /** @var RestaurantDetails $entityInstance */
-    //     // $entityInstance = $entityInstance;
+        public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
+        
+    {
+        /** @var RestaurantDetails $entityInstance */
+        $entityInstance = $entityInstance;
+        $currentUser = $this->getUser();
+    if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
+        // Pobierz restaurację powiązaną z zalogowanym użytkownikiem
+        $customer = $currentUser->getCustomer(); // Upewnij się, że masz odpowiednią metodę w User
 
-    //     // $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
-    //     // parent::updateEntity($entityManager, $entityInstance);
-    // }
+            $entityInstance->setCustomer($customer);
+        
+    }
+        $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
+      
+        parent::updateEntity($entityManager, $entityInstance);
+    }
 
 
 

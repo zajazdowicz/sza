@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,8 +33,9 @@ class PricesIngredientType extends AbstractType
     {
         
         $builder
-            ->add('price', TextType::class, [
+            ->add('price', MoneyType::class, [
                 'label' => 'Cena',  
+               'required'   => false,
             ])
            ->add('ingredients', EntityType::class, [
                 'class' => Ingredients::class, // Klasa encji, z której będą pochodziły składniki
@@ -54,6 +56,7 @@ class PricesIngredientType extends AbstractType
                 'choice_label' => 'size', // Pole, które będzie wyświetlane w liście
                 'multiple' => true, // Umożliwia wybór wielu składników
                 'expanded' => true, // Umożliwia wyświetlenie jako dropdown\
+                'attr' => ['class' => 'grouped-field'],
                 'query_builder' => function() use ($options)  {
                     $category = $options['restaurant_category'];
                     return $this->entityManager->createQueryBuilder()

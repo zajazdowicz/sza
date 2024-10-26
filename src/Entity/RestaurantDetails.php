@@ -73,14 +73,14 @@ class RestaurantDetails
     #[ORM\ManyToMany(targetEntity: RestaurantOpeningHours::class, inversedBy: 'restaurantDetails', cascade: ['persist', 'remove'])]
     private Collection $openingHours;
 
-    // /**
-    //  * @var Collection<int, User>
-    //  */
-    // #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'restaurantDetails')]
-    // private Collection $users;
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'restaurantDetails')]
+    private Collection $users;
 
-    #[ORM\ManyToOne(inversedBy: 'restaurantDetails')]
-    private ?Customer $customer = null;
+    // #[ORM\ManyToOne(inversedBy: 'restaurantDetails')]
+    // private ?Customer $customer = null;
 
     public function __construct()
     {
@@ -91,7 +91,7 @@ class RestaurantDetails
         $this->restaurantContactDetails = new RestaurantContactDetails();
         $this->address = new Address();
         $this->openingHours = new ArrayCollection();
-        // $this->users = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
 
@@ -342,45 +342,45 @@ class RestaurantDetails
             return $this;
         }
 
-        // /**
-        //  * @return Collection<int, User>
-        //  */
-        // public function getUsers(): Collection
-        // {
-        //     return $this->users;
-        // }
-
-        // public function addUser(User $user): static
-        // {
-        //     if (!$this->users->contains($user)) {
-        //         $this->users->add($user);
-        //         $user->setRestaurantDetails($this);
-        //     }
-
-        //     return $this;
-        // }
-
-        // public function removeUser(User $user): static
-        // {
-        //     if ($this->users->removeElement($user)) {
-        //         // set the owning side to null (unless already changed)
-        //         if ($user->getRestaurantDetails() === $this) {
-        //             $user->setRestaurantDetails(null);
-        //         }
-        //     }
-
-        //     return $this;
-        // }
-
-        public function getCustomer(): ?Customer
+        /**
+         * @return Collection<int, User>
+         */
+        public function getUsers(): Collection
         {
-            return $this->customer;
+            return $this->users;
         }
 
-        public function setCustomer(?Customer $customer): static
+        public function addUser(User $user): static
         {
-            $this->customer = $customer;
+            if (!$this->users->contains($user)) {
+                $this->users->add($user);
+                $user->setRestaurantDetails($this);
+            }
 
             return $this;
         }
+
+        public function removeUser(User $user): static
+        {
+            if ($this->users->removeElement($user)) {
+                // set the owning side to null (unless already changed)
+                if ($user->getRestaurantDetails() === $this) {
+                    $user->setRestaurantDetails(null);
+                }
+            }
+
+            return $this;
+        }
+
+        // public function getCustomer(): ?Customer
+        // {
+        //     return $this->customer;
+        // }
+
+        // public function setCustomer(?Customer $customer): static
+        // {
+        //     $this->customer = $customer;
+
+        //     return $this;
+        // }
 }

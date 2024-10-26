@@ -10,6 +10,7 @@ use App\Form\IngredientsType;
 use App\Form\PriceProductType;
 use App\Form\PricesIngredientType;
 use App\Form\ProductType;
+use App\Form\SizeProductType;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use Doctrine\ORM\QueryBuilder;
@@ -18,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -36,8 +38,7 @@ class RestaurantCategoryCrudController extends AbstractCrudController
     {
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
         ->join('entity.restaurantDetails', 'r')
-        ->join('r.customer', 'c')
-        ->join('c.user', 'u')
+        ->join('r.users', 'u')
         ->andWhere('u.id = :user')
         ->setParameter('user', $this->getUser());
     }
@@ -50,14 +51,15 @@ class RestaurantCategoryCrudController extends AbstractCrudController
             FormField::addTab('Kategoria'),
             TextField::new('nameCategory'),
             TextField::new('image'),
-            BooleanField::new('isActive')];
+            BooleanField::new('active')];
     }else {
           $restaurantCategoryId = $this->getContext()->getEntity()->getInstance()->getId();
         return [
             FormField::addTab('Kategoria'),
             TextField::new('nameCategory'),
             TextField::new('image'),
-            BooleanField::new('isActive'),
+            BooleanField::new('active'),
+
             FormField::addTab('Produkty w kategorii'),
             CollectionField::new('ingredients', "Produkty")
                 ->setEntryType(IngredientsType::class)
@@ -71,8 +73,18 @@ class RestaurantCategoryCrudController extends AbstractCrudController
                 ->setFormTypeOptions([
                 'entry_options' => 
                     ['restaurant_category' => $restaurantCategoryId,] // Przekazujemy kategorię do formularza IngredientsType
-               
             ]),
+            FormField::addTab('Dane dotyczące produktów'),
+            CollectionField::new('sizeProduct', "Produkty")
+                ->setEntryType(SizeProductType::class)
+                ->allowAdd(true)
+                ->allowDelete(true)
+            //     ->setFormTypeOptions([
+            //     'entry_options' => 
+            //         ['restaurant_category' => $restaurantCategoryId,] // Przekazujemy kategorię do formularza IngredientsType
+               
+            // ])
+            ,
             FormField::addTab('Cena składników'),
             CollectionField::new('pricesIngredient', 'Cena')
                 ->setEntryType(PricesIngredientType::class)
@@ -92,23 +104,22 @@ class RestaurantCategoryCrudController extends AbstractCrudController
     {
         /** @var RestaurantCategory $entityInstance */
         $entityInstance = $entityInstance;
-      $restaurantDetails = $entityInstance->getRestaurantDetails();
-  $currentUser = $this->getUser();
+        $restaurantDetails = $entityInstance->getRestaurantDetails();
+        $currentUser = $this->getUser();
     if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
         // Pobierz restaurację powiązaną z zalogowanym użytkownikiem
-        $restaurantDetails = $currentUser->getCustomer()->getRestaurantDetails(); // Upewnij się, że masz odpowiednią metodę w User
+        $restaurantDetails = $currentUser->getRestaurantDetails(); // Upewnij się, że masz odpowiednią metodę w User
 
-        // Przypisz restaurację do nowej kategorii
-        foreach ($restaurantDetails as $detail) {
-            $entityInstance->addRestaurantDetail($detail);
+            $entityInstance->addRestaurantDetail($restaurantDetails);
+        
+    }
+            foreach ($restaurantDetails as $detail) {
+                
+                $entityInstance->addRestaurantDetail($detail);
         }
+        $entityManager->persist($entityInstance);
+        $entityManager->flush();
     }
 
-    // Teraz możesz również dodać inne logiki, jeśli potrzebujesz
-
-    // Pamiętaj o zapisaniu encji
-    $entityManager->persist($entityInstance);
-    $entityManager->flush();
-    }
-   
+ 
 }
