@@ -58,14 +58,25 @@ class RestaurantDetailsCrudController extends AbstractCrudController
 
     public function index(AdminContext $context)
     {
-      
-                $firstRecord = $this->entityManager->getRepository(RestaurantDetails::class)->findOneBy([]);
+        $currentUser = $this->getUser();
+    if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
+        $restauran = $currentUser->getRestaurantDetails();
+    }
+    if($restauran !=null ){
+                $restauranId = $restauran->getId();
            $url = $this->adminUrlGenerator
             ->setController(self::class)
             ->setAction('edit') // Ustawiamy akcję tworzenia nowego rekordu
-            ->setEntityId($firstRecord->getId()) 
+            ->setEntityId($restauranId) 
             ->generateUrl();
-
+           
+    }else {
+        $url = $this->adminUrlGenerator
+            ->setController(self::class)
+            ->setAction('new') // Ustawiamy akcję tworzenia nowego rekordu
+            ->generateUrl();
+            
+    }
         return $this->redirect($url);
     }
 
@@ -113,12 +124,11 @@ class RestaurantDetailsCrudController extends AbstractCrudController
         $entityInstance = $entityInstance;
         $currentUser = $this->getUser();
     if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
-        // Pobierz restaurację powiązaną z zalogowanym użytkownikiem
-        $customer = $currentUser->getCustomer(); // Upewnij się, że masz odpowiednią metodę w User
 
-            $entityInstance->setCustomer($customer);
-        
+        $entityInstance->addUser($currentUser);
     }
+
+    
         $entityInstance->setSlug(str_replace(' ', '_', $entityInstance->getNameRestaurant()));
       
         parent::updateEntity($entityManager, $entityInstance);

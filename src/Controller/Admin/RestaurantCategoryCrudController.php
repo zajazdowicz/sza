@@ -109,9 +109,7 @@ class RestaurantCategoryCrudController extends AbstractCrudController
     if ($currentUser instanceof User) { // Upewnij się, że użytkownik jest instancją odpowiedniej klasy
         // Pobierz restaurację powiązaną z zalogowanym użytkownikiem
         $restaurantDetails = $currentUser->getRestaurantDetails(); // Upewnij się, że masz odpowiednią metodę w User
-
             $entityInstance->addRestaurantDetail($restaurantDetails);
-        
     }
             foreach ($restaurantDetails as $detail) {
                 
