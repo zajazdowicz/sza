@@ -54,6 +54,15 @@ class RestaurantCategory
     #[ORM\OneToMany(targetEntity: SizeProduct::class, mappedBy: 'restaurantCategory', cascade: ['persist'])]
     private Collection $sizeProduct;
 
+    /**
+     * @var Collection<int, FreeExtras>
+     */
+    #[ORM\OneToMany(targetEntity: FreeExtras::class, mappedBy: 'restaurantCategory', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $freeExtras;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $quantityFree = null;
+
 
 
     public function __construct()
@@ -63,6 +72,7 @@ class RestaurantCategory
         $this->ingredients = new ArrayCollection();
         $this->pricesIngredient = new ArrayCollection();
         $this->sizeProduct = new ArrayCollection();
+        $this->freeExtras = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +253,48 @@ class RestaurantCategory
                 $sizeProduct->setRestaurantCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FreeExtras>
+     */
+    public function getFreeExtras(): Collection
+    {
+        return $this->freeExtras;
+    }
+
+    public function addFreeExtra(FreeExtras $freeExtra): static
+    {
+        if (!$this->freeExtras->contains($freeExtra)) {
+            $this->freeExtras->add($freeExtra);
+            $freeExtra->setRestaurantCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFreeExtra(FreeExtras $freeExtra): static
+    {
+        if ($this->freeExtras->removeElement($freeExtra)) {
+            // set the owning side to null (unless already changed)
+            if ($freeExtra->getRestaurantCategory() === $this) {
+                $freeExtra->setRestaurantCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getQuantityFree(): ?int
+    {
+        return $this->quantityFree;
+    }
+
+    public function setQuantityFree(?int $quantityFree): static
+    {
+        $this->quantityFree = $quantityFree;
 
         return $this;
     }

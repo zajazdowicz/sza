@@ -19,13 +19,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use FreeExtrasType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class RestaurantCategoryCrudController extends AbstractCrudController
 {
@@ -79,6 +83,9 @@ class RestaurantCategoryCrudController extends AbstractCrudController
                 ->setEntryType(SizeProductType::class)
                 ->allowAdd(true)
                 ->allowDelete(true)
+                 ->formatValue(function ($value, $entity) {
+            return  $entity->getSize();
+        })
             //     ->setFormTypeOptions([
             //     'entry_options' => 
             //         ['restaurant_category' => $restaurantCategoryId,] // Przekazujemy kategorię do formularza IngredientsType
@@ -93,10 +100,18 @@ class RestaurantCategoryCrudController extends AbstractCrudController
                 'entry_options' => 
                     ['restaurant_category' => $restaurantCategoryId,] // Przekazujemy kategorię do formularza IngredientsType
                
-            ])
-            
-                // ->setFormTypeOption('restaurant_category', $this->), // Przekazujemy kategorię
+                ]),
+                FormField::addTab('Darmowe dodatki'),
+                IntegerField::new('quantityFree', "Ilość wybrania gratisow"),
+                CollectionField::new('freeExtras')
+                    ->allowAdd()
+                    ->allowDelete()
+                    ->setEntryType(FreeExtrasType::class) 
+                    ->setFormTypeOptions([
+                        'by_reference' => false,
+                    ])
         ];
+        
     }
     } 
     // // Zaraz przed dodaniem

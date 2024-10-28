@@ -102,4 +102,5 @@ class SizeProduct
 
         return $this;
     }
+
 }

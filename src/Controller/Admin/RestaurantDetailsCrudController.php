@@ -112,6 +112,8 @@ class RestaurantDetailsCrudController extends AbstractCrudController
                 ->setEntryType(OpenHoursType::class)
                 ->allowAdd(true)
                 ->allowDelete(true),
+                FormField::addTab('Typy płatności'),
+                AssociationField::new('typePayments'),
 
                 
             ];
