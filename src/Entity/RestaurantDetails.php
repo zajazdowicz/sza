@@ -79,6 +79,12 @@ class RestaurantDetails
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'restaurantDetails')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Cart>
+     */
+    #[ORM\OneToMany(targetEntity: Cart::class, mappedBy: 'restaurantDetails')]
+    private Collection $carts;
+
     // #[ORM\ManyToOne(inversedBy: 'restaurantDetails')]
     // private ?Customer $customer = null;
 
@@ -92,6 +98,7 @@ class RestaurantDetails
         $this->address = new Address();
         $this->openingHours = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
 
@@ -383,4 +390,34 @@ class RestaurantDetails
 
         //     return $this;
         // }
+
+        /**
+         * @return Collection<int, Cart>
+         */
+        public function getCarts(): Collection
+        {
+            return $this->carts;
+        }
+
+        public function addCart(Cart $cart): static
+        {
+            if (!$this->carts->contains($cart)) {
+                $this->carts->add($cart);
+                $cart->setRestaurantDetails($this);
+            }
+
+            return $this;
+        }
+
+        public function removeCart(Cart $cart): static
+        {
+            if ($this->carts->removeElement($cart)) {
+                // set the owning side to null (unless already changed)
+                if ($cart->getRestaurantDetails() === $this) {
+                    $cart->setRestaurantDetails(null);
+                }
+            }
+
+            return $this;
+        }
 }
