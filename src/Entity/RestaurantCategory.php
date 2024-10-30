@@ -63,6 +63,9 @@ class RestaurantCategory
     #[ORM\Column(nullable: true)]
     private ?int $quantityFree = null;
 
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $typeSize = null;
+
 
 
     public function __construct()
@@ -295,6 +298,18 @@ class RestaurantCategory
     public function setQuantityFree(?int $quantityFree): static
     {
         $this->quantityFree = $quantityFree;
+
+        return $this;
+    }
+
+    public function getTypeSize(): ?string
+    {
+        return $this->typeSize;
+    }
+
+    public function setTypeSize(?string $typeSize): static
+    {
+        $this->typeSize = $typeSize;
 
         return $this;
     }

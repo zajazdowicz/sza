@@ -22,6 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -63,7 +64,6 @@ class RestaurantCategoryCrudController extends AbstractCrudController
             TextField::new('nameCategory'),
             TextField::new('image'),
             BooleanField::new('active'),
-
             FormField::addTab('Produkty w kategorii'),
             CollectionField::new('ingredients', "Produkty")
                 ->setEntryType(IngredientsType::class)
@@ -79,6 +79,10 @@ class RestaurantCategoryCrudController extends AbstractCrudController
                     ['restaurant_category' => $restaurantCategoryId,] // Przekazujemy kategorię do formularza IngredientsType
             ]),
             FormField::addTab('Dane dotyczące produktów'),
+            ChoiceField::new('typeSize', 'Rodzaj wielkości')->setChoices([
+                         'Gram' => "gram",
+                         'Centymert' => "kg",
+            ]),
             CollectionField::new('sizeProduct', "Produkty")
                 ->setEntryType(SizeProductType::class)
                 ->allowAdd(true)

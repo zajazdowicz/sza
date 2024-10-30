@@ -32,13 +32,13 @@ class SizeProductType extends AbstractType
     {
         
         $builder
-            ->add('type', ChoiceType::class, [
-                'label' => 'Typ miary wielkości ', 
-                 'choices'  => [
-                        'Gram' => "gram",
-                        'Centymert' => "kg",
-                    ],
-            ])
+            // ->add('type', ChoiceType::class, [
+            //     'label' => 'Typ miary wielkości ', 
+            //      'choices'  => [
+            //             'Gram' => "gram",
+            //             'Centymert' => "kg",
+            //         ],
+            // ])
             ->add('size', TextType::class, [
                 'label' => 'Wielkość ', 
             ]);

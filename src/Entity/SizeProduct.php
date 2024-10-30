@@ -18,8 +18,8 @@ class SizeProduct
     #[ORM\Column(length: 64)]
     private ?string $size = null;
 
-    #[ORM\Column(length: 64)]
-    private ?string $type = null;
+    // #[ORM\Column(length: 64)]
+    // private ?string $type = null;
 
     /**
      * @var Collection<int, PricesIngredient>
@@ -52,17 +52,17 @@ class SizeProduct
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
+    // public function getType(): ?string
+    // {
+    //     return $this->type;
+    // }
 
-    public function setType(string $type): static
-    {
-        $this->type = $type;
+    // public function setType(string $type): static
+    // {
+    //     $this->type = $type;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, PricesIngredient>
